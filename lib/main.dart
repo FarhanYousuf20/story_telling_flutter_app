@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
 
+import 'package:flutter_tts/flutter_tts.dart';
+
 void main() {
-  runApp(PictureStoryApp());
+  runApp(const PictureStoryApp());
 }
 
 class PictureStoryApp extends StatelessWidget {
+  const PictureStoryApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -12,17 +16,19 @@ class PictureStoryApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: StoryLibraryScreen(),
+      home: const StoryLibraryScreen(),
     );
   }
 }
 
 class StoryLibraryScreen extends StatelessWidget {
+  const StoryLibraryScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Story Library'),
+        title: const Text('Story Library'),
       ),
       body: ListView.builder(
         itemCount: storyList.length,
@@ -38,7 +44,7 @@ class StoryLibraryScreen extends StatelessWidget {
               );
             },
             child: Container(
-              padding: EdgeInsets.all(16.0),
+              padding: const EdgeInsets.all(16.0),
               child: Row(
                 children: [
                   Image.asset(
@@ -47,10 +53,10 @@ class StoryLibraryScreen extends StatelessWidget {
                     height: 100,
                     fit: BoxFit.cover,
                   ),
-                  SizedBox(width: 16.0),
+                  const SizedBox(width: 16.0),
                   Text(
                     storyList[index].title,
-                    style: TextStyle(fontSize: 18),
+                    style: const TextStyle(fontSize: 18),
                   ),
                 ],
               ),
@@ -63,9 +69,17 @@ class StoryLibraryScreen extends StatelessWidget {
 }
 
 class StoryViewerScreen extends StatelessWidget {
+  final FlutterTts flutterTts = FlutterTts();
+  final TextEditingController textEditingController = TextEditingController();
+
+  speak(String text) async {
+    await flutterTts.setLanguage("en-US");
+    await flutterTts.setPitch(1);
+    await flutterTts.speak(text);
+  }
   final Story story;
 
-  StoryViewerScreen({required this.story});
+  StoryViewerScreen({super.key, required this.story});
 
   @override
   Widget build(BuildContext context) {
@@ -86,14 +100,15 @@ class StoryViewerScreen extends StatelessWidget {
               padding: const EdgeInsets.all(16.0),
               child: Text(
                 story.content,
-                style: TextStyle(fontSize: 16),
+                style: const TextStyle(fontSize: 16),
               ),
             ),
             ElevatedButton(
-              onPressed: () {
-                // Implement interactive elements or read-aloud functionality
-              },
-              child: Text('Read Aloud'),
+              onPressed: () => speak(story.content),
+              // onPressed: () {
+              //   // Implement interactive elements or read-aloud functionality
+              // },
+              child: const Text('Read Aloud'),
             ),
           ],
         ),
